@@ -1,14 +1,13 @@
 //const usuario = require('../models/Usuario');
-import usuario from "../models/Usuario";
+import usuarioModel from "../models/Usuario";
 
 class ApiUsuario {
     criarUsuario(usuarioReq: any) {
-        console.log(usuarioReq);
-        return usuario.create(usuarioReq);
+        return usuarioModel.create(usuarioReq);
     };
 
     usuarioEspecifico(id: any) {
-        return  usuario.findById(id);
+        return  usuarioModel.findById(id);
     };
 }
 

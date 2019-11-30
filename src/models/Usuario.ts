@@ -1,4 +1,6 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from "mongoose";
+//import * as mongoose from "mongoose";
+import IUsuarioModel from "../interfaces/IUserModel";
 // Definindo o modelo de um usuário
 const UsuarioSchema = new Schema({
     primeiroNome: {
@@ -27,5 +29,5 @@ const UsuarioSchema = new Schema({
     timestamps: true
 });
 
-const user = model("Usuario", UsuarioSchema);
+const user = model<IUsuarioModel>("Usuario", UsuarioSchema);
 export default user;

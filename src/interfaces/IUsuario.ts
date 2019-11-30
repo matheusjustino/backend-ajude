@@ -1,6 +1,4 @@
-import { Document } from 'mongoose';
-
-interface IUsuario extends Document {
+interface IUsuario {
     primeiroNome: String,
     ultimoNome: String,
     email: String,
