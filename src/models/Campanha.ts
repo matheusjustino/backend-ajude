@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 import ICampanhaModel from "../interfaces/ICampanhaModel";
+
 // Definindo o modelo de uma campanha
 const CampanhaSchema = new Schema({
     nomeCurto: {
@@ -41,17 +42,7 @@ const CampanhaSchema = new Schema({
         type: String,
         required: true
     },
-    comentarios: [{
-        comentario: {
-            texto: String,
-            dono: String,
-        },
-        repostas: [{
-            texto: String,
-            dono: String
-        }],
-        default: []
-    }],
+    comentarios: [],
     like: {
         type: Number,
         required: true,
@@ -61,7 +52,15 @@ const CampanhaSchema = new Schema({
         type: Number,
         required: true,
         default: 0
-    }
+    },
+    deuLike: [{
+        type: String,
+        default: []
+    }],
+    deuDislike: [{
+        type: String,
+        default: []
+    }]
 });
 
 const campanha = model<ICampanhaModel>("Campanha", CampanhaSchema);

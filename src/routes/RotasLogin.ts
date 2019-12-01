@@ -5,18 +5,6 @@ const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
-const verificaJWT = (req: any, res: any, next: any) => {
-    const token = req.headers["x-access-token"];
-    if (!token) return res.status(401).json({ auth: false, message: "Sem token de acesso" });
-    
-    jwt.verify(token, process.env.SECRET, function(err: any, decoded: any) {
-        if (err) return res.status(500).json({ auth: false,  message: "Falha na autenticação" });
-
-        req.userId = decoded.id;
-        next();
-    });
-}
-
 router.route("/login")
     .post(async (req: any, res: any) => {
         const { email, senha, _id }: IUsuarioModel = await apiUsuario.usuarioPorEmail(req.body.email);
