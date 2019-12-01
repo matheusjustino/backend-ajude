@@ -1,25 +1,28 @@
+require("dotenv-safe").config();
 import mongoose from "./database/ConexaoBD";
-//import router from "./routes"
 import bodyParser from "body-parser";
 const express = require("express");
 const cors = require("cors");
-const routes = require("./routes/RotasUsuarios");
+const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
+const rotasUsuario = require("./routes/RotasUsuarios");
+const rotasLogin = require("./routes/RotasLogin");
 const PORT = 3333
 
 const app = express();
 
 
 app.use(cors());
+app.use(helmet()); // desabilitando alguns headears para maior segurança
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.json());
-app.use("/api", routes);
+app.use("/api", rotasLogin, rotasUsuario);
 
 
-mongoose();
+mongoose(); // conectando com o BD
 
 app.listen(PORT, () => {
     console.log(`[Servidor] Rodando em http://localhost:${PORT}`);
 });
-//export default app;
-//module.exports = app;
