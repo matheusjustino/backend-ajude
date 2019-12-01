@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
-//import * as mongoose from "mongoose";
-import IUsuarioModel from "../interfaces/IUserModel";
+import IUsuarioModel from "../interfaces/IUsuarioModel";
+
 // Definindo o modelo de um usuário
 const UsuarioSchema = new Schema({
     primeiroNome: {
@@ -21,7 +21,7 @@ const UsuarioSchema = new Schema({
         type: String,
         require: true
     },
-    senhaCartao: {
+    senha: {
         type: String,
         require: true
     },

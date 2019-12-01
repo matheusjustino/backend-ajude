@@ -3,7 +3,7 @@ interface IUsuario {
     ultimoNome: String,
     email: String,
     cartao: String,
-    senhaCartao: String,
+    senha: String,
 }
 
 export default IUsuario;
