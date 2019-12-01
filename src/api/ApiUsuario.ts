@@ -1,4 +1,3 @@
-//const usuario = require('../models/Usuario');
 import usuarioModel from "../models/Usuario";
 import IUsuarioModel from "../interfaces/IUsuarioModel";
 

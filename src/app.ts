@@ -7,6 +7,7 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const rotasUsuario = require("./routes/RotasUsuarios");
 const rotasLogin = require("./routes/RotasLogin");
+const rotasCampanha = require("./routes/RotasCampanha");
 const PORT = 3333
 
 const app = express();
@@ -18,7 +19,7 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.json());
-app.use("/api", rotasLogin, rotasUsuario);
+app.use("/api", [rotasLogin, rotasUsuario, rotasCampanha]);
 
 
 mongoose(); // conectando com o BD
