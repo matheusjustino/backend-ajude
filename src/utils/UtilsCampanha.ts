@@ -1,5 +1,3 @@
-import ICampanhaModel from "../interfaces/ICampanhaModel";
-
 function orderna(campanhaA: any, campanhaB: any) {
     return campanhaA > campanhaB ? 1 : campanhaA < campanhaB ? -1 : 0;
 }
@@ -7,8 +5,8 @@ function orderna(campanhaA: any, campanhaB: any) {
 export default {
     likeOuDislike: (idUsuario: String, valor: Number, arrayLikesEDislikes: Array<any>) => {
         function contaLikesEDislikes(array: Array<any>) {
-            const like = array.reduce((acumulador: any, elemento: any) => elemento.valor === 1 ? acumulador += 1 : false, 0);
-            const dislike = array.reduce((acumulador: any, elemento: any) => elemento.valor === 2 ? acumulador += 1 : false, 0);
+            const like = array.reduce((acumulador: any, elemento: any) => elemento.valor === 1 ? acumulador += 1 : acumulador += 0, 0);
+            const dislike = array.reduce((acumulador: any, elemento: any) => elemento.valor === 2 ? acumulador += 1 : acumulador += 0, 0);
             return { like, dislike };
         }
 
