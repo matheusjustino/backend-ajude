@@ -53,12 +53,9 @@ const CampanhaSchema = new Schema({
         required: true,
         default: 0
     },
-    deuLike: [{
-        type: String,
-        default: []
-    }],
-    deuDislike: [{
-        type: String,
+    likesEDislikes: [{
+        dono: String,
+        valor: Number,
         default: []
     }]
 });

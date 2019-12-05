@@ -2,6 +2,7 @@ import campanhaModel from "../models/Campanha";
 import ICampanhaModel from "../interfaces/ICampanhaModel";
 import comentarioModel from "../models/Comentario";
 import IComentarioModel from "../interfaces/IComentarioModel";
+import UtilsCampanha from "../utils/UtilsCampanha";
 
 class ApiCampanha {
     criarCampanha(campanhaReq: ICampanhaModel): Promise<ICampanhaModel> {
@@ -30,16 +31,11 @@ class ApiCampanha {
 
     async likeOuDislike(urlR: String, statusR: any, idUsuario: String): Promise<ICampanhaModel> {
         let campanha: any = await campanhaModel.findOne({ url: urlR });
-        if (statusR.like) {
-            campanha.like++;
-            await campanhaModel.updateOne({ url: urlR }, campanha);
-            ///campanha.like += 1;
-        } else {
-            campanha.dislike++;
-            await campanhaModel.updateOne({ url: urlR }, campanha);
-            //campanha.dislike += 1;
-        }
-        console.log(campanha.like, campanha.dislike);
+        const { like, dislike, arrayLikesEDislikes } = UtilsCampanha.likeOuDislike(idUsuario, statusR.like ? 1 : 2, campanha.likesEDislikes);
+        campanha.like = like;
+        campanha.dislike = dislike;
+        campanha.likesEDislikes = arrayLikesEDislikes;
+        await campanhaModel.updateOne({ url: urlR }, campanha);
         return campanha;
     }
 
