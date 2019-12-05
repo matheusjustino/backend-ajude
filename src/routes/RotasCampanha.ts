@@ -37,13 +37,21 @@ router.route("/campanha/:url")
     .get(authService, async (req: any, res: any): Promise<ICampanhaModel> => {
         const campanha: ICampanhaModel = await apiCampanha.campanhaByUrl(req.params.url);
         if (campanha === null) {
-            return res.json({ msg: "Campanha não encontrada" })
+            return res.status(400).json({ msg: "Campanha não encontrada" })
+        } else {
+            return res.json(campanha);
+        }
+    })
+    .post(authService, async (req: any, res: any): Promise<ICampanhaModel> => {
+        const campanha: ICampanhaModel = await apiCampanha.fazerDoacao(req.params.url, req.body.doacoes);
+        if (campanha === null) {
+            return res.status(400).json({ msg: "Campanha não encontrada "});
         } else {
             return res.json(campanha);
         }
     })
     .put(authService, async (req: any, res: any): Promise<ICampanhaModel> => {
-        const campanha: ICampanhaModel = await apiCampanha.atualizarCampanha(req.params.url, req.body, req.userId);
+        const campanha: ICampanhaModel = await apiCampanha.atualizarCampanha(req.params.url, req.body, req.userId, res);
         if (campanha === null) {
             return res.status(400).json({ msg: "Campanha não encontrada "});
         } else {
@@ -67,6 +75,16 @@ router.route("/campanha/:url/responder")
         };
         const campanha: ICampanhaModel = await apiCampanha.responderComentario(req.params.url, resposta, req.body.idComentario);
         return res.json(campanha);
+    })
+
+router.route("/campanhas/melhores-campanhas")
+    .get(async (req: any, res: any): Promise<ICampanhaModel[]> => {
+        const campanhas: any = await apiCampanha.melhoresCampanhas();
+        if (campanhas === null) {
+            return res.status(400).json({ msg: "Nenhuma campanha cadastrada" });
+        } else {
+            return res.json(campanhas);
+        }
     })
 
 module.exports = router;
