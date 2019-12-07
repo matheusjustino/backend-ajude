@@ -7,6 +7,7 @@ interface Campanha {
     meta: String,
     doacoes: String,
     dono: String,
+    comentarios: Array<any>
     like: Number,
     dislike: Number
 }

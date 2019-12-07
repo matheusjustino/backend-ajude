@@ -12,16 +12,7 @@ const ComentarioSchema = new Schema({
         required: true,
         default: ""
     },
-    respostas: [{
-        texto: {
-            type: String,
-            default: ""
-        },
-        dono: {
-            type: String,
-            default: ""
-        }
-    }]
+    respostas: []
 });
 
 

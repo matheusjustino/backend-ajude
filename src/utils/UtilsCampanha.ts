@@ -28,7 +28,7 @@ export default {
     },
 
     alteraStatus: (campanha: any) => {
-        if (parseFloat(campanha.meta) === parseFloat(campanha.doacoes)) {
+        if (parseFloat(campanha.meta) <= parseFloat(campanha.doacoes)) {
             campanha.status = "Concluída";
             return campanha;
         }
