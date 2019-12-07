@@ -1,16 +1,12 @@
 import loginController from "./Controllers/LoginController";
 import usuarioController from "./Controllers/UsuarioController";
 import campanhaController from "./Controllers/CampanhaController";
-//import Autenticacao from "../services/Autenticacao";
+
 import { AuthGuard } from "./Guards/AuthGuard";
 import { DonoGuard, DonoComentarioGuard, DonoRespostaGuard } from "./Guards/DonoGuard";
 
 const routes = [
-    {
-        path: "",
-        method: "GET",
-        action: usuarioController.todosOsUsuarios
-    },
+    // Rotas de autenticação
     {
         path: "auth",
         routes: [
@@ -27,6 +23,7 @@ const routes = [
             }
         ]
     },
+    // Rotas de usuários
     {
         path: "usuarios",
         routes: [
@@ -49,6 +46,7 @@ const routes = [
         guards: [AuthGuard],
         action: usuarioController.usuarioPorEmail
     },
+    // Rotas de campanha
     {
         path: "campanhas",
         guards: [AuthGuard],
@@ -124,6 +122,7 @@ const routes = [
             }
         ]
     },
+    // Rota de perfil
     {
         path: "perfil",
         method: "GET",
