@@ -8,7 +8,7 @@ export const AuthGuard = async (req: any, res: any) => {
     } else {
         const result = await jwt.verify(token, process.env.SECRET, function (err: any, decoded: any) {
             if (err) {
-                res.status(500).json({ auth: false, message: "Falha de autenticação" });
+                res.status(401).json({ auth: false, message: "Falha de autenticação" });
                 return false;
             } else {
                 req.userId = decoded._id;

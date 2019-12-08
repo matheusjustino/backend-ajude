@@ -1,12 +1,14 @@
 import usuarioModel from "../../models/Usuario";
 import IUsuarioModel from "../../interfaces/IUsuarioModel";
-const jwt = require('jsonwebtoken');
+
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 class LoginController {
     async fazerLogin(req: any, res: any) {
         try {
             const { email, senha, _id }: IUsuarioModel | any = await usuarioModel.findOne({ email: req.body.email });
-            if (email === req.body.email && senha === req.body.senha) {
+            if (email === req.body.email && await bcrypt.compare(req.body.senha, senha)) {
                 const token = jwt.sign({ _id }, process.env.SECRET, {// passando id e secret para gerar o token
                     expiresIn: 900 // 15 minutos até ficar inválido
                 });
