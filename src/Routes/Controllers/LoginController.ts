@@ -1,11 +1,13 @@
 import usuarioModel from "../../models/Usuario";
 import IUsuarioModel from "../../interfaces/IUsuarioModel";
 
+import { Response, Request } from "express";
+
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 class LoginController {
-    async fazerLogin(req: any, res: any) {
+    async fazerLogin(req: Request, res: Response): Promise<Response> {
         try {
             const { email, senha, _id }: IUsuarioModel | any = await usuarioModel.findOne({ email: req.body.email });
             if (email === req.body.email && await bcrypt.compare(req.body.senha, senha)) {
@@ -20,7 +22,7 @@ class LoginController {
         }
     }
 
-    fazerLogout(req: any, res: any) {
+    fazerLogout(req: Request, res: Response): Response {
         return res.status(200).json({ auth: false, token: null });
     }
 }

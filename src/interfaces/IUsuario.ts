@@ -1,9 +1,9 @@
 interface IUsuario {
-    primeiroNome: String,
-    ultimoNome: String,
-    email: String,
-    cartao: String,
-    senha: String,
+    primeiroNome: string,
+    ultimoNome: string,
+    email: string,
+    cartao: string,
+    senha: string,
 }
 
 export default IUsuario;

@@ -1,12 +1,18 @@
-function orderna(campanhaA: any, campanhaB: any) {
+import ICampanhaModel from "../interfaces/ICampanhaModel";
+
+function orderna(campanhaA: number, campanhaB: number) {
     return campanhaA > campanhaB ? 1 : campanhaA < campanhaB ? -1 : 0;
 }
 
 export default {
-    likeOuDislike: (idUsuario: String, valor: Number, arrayLikesEDislikes: Array<any>) => {
+    geraUrl: (url: string): string => {
+        return url.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\w\-]+/g, '-');
+    },
+
+    likeOuDislike: (idUsuario: String, valor: number, arrayLikesEDislikes: Array<any>) => {
         function contaLikesEDislikes(array: Array<any>) {
-            const like = array.reduce((acumulador: any, elemento: any) => elemento.valor === 1 ? acumulador += 1 : acumulador += 0, 0);
-            const dislike = array.reduce((acumulador: any, elemento: any) => elemento.valor === 2 ? acumulador += 1 : acumulador += 0, 0);
+            const like = array.reduce((acumulador: number, elemento: any) => elemento.valor === 1 ? acumulador += 1 : acumulador += 0, 0);
+            const dislike = array.reduce((acumulador: number, elemento: any) => elemento.valor === 2 ? acumulador += 1 : acumulador += 0, 0);
             return { like, dislike };
         }
 
@@ -23,36 +29,19 @@ export default {
         return { like, dislike, arrayLikesEDislikes };
     },
 
-    temPermissão: (emailUsuario: String, donoCampanha: any, ) => {
-        return emailUsuario === donoCampanha;
-    },
-
-    alteraStatus: (campanha: any) => {
+    alteraStatus: (campanha: ICampanhaModel | any) => {
         if (parseFloat(campanha.meta) <= parseFloat(campanha.doacoes)) {
             campanha.status = "Concluída";
             return campanha;
         }
-        const data = campanha.deadline.split("/");
-        const dataAgora = new Date();
-        if (data[2] >= dataAgora.getFullYear()) {
-            if (data[1] >= dataAgora.getMonth() + 1) {
-                if (data[0] >= dataAgora.getDate()) {
-                    return campanha;
-                } else {
-                    campanha.status = "Vencida";
-                    return campanha;
-                }
-            } else {
-                campanha.status = "Vencida";
-                return campanha;
-            }
-        } else {
-            campanha.status = "Vencida";
-            return campanha;
-        }
+        const [dia, mes, ano] = campanha.deadline.split("/");
+        const dataCampanhaValueOf = new Date(ano, mes, dia).valueOf();
+        const dataAgora = new Date().valueOf();
+        campanha.status = dataCampanhaValueOf >= dataAgora ? campanha.status : "Vencida";
+        return campanha;
     },
 
-    ordenaPorMeta(campanhaA: any, campanhaB: any) {
+    ordenaPorMeta(campanhaA: ICampanhaModel, campanhaB: ICampanhaModel) {
         return orderna(parseFloat(campanhaA.meta) - parseFloat(campanhaA.doacoes), parseFloat(campanhaB.meta) - parseFloat(campanhaB.doacoes));
     },
 
