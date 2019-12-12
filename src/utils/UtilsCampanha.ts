@@ -9,7 +9,7 @@ export default {
         return url.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\w\-]+/g, '-');
     },
 
-    likeOuDislike: (idUsuario: String, valor: number, arrayLikesEDislikes: Array<any>) => {
+    likeOuDislike: (idUsuario: string, valor: number, arrayLikesEDislikes: Array<any>) => {
         function contaLikesEDislikes(array: Array<any>) {
             const like = array.reduce((acumulador: number, elemento: any) => elemento.valor === 1 ? acumulador += 1 : acumulador += 0, 0);
             const dislike = array.reduce((acumulador: number, elemento: any) => elemento.valor === 2 ? acumulador += 1 : acumulador += 0, 0);
@@ -45,10 +45,11 @@ export default {
         return orderna(parseFloat(campanhaA.meta) - parseFloat(campanhaA.doacoes), parseFloat(campanhaB.meta) - parseFloat(campanhaB.doacoes));
     },
 
-    ordenaPorData(campanhaA: any, campanhaB: any) {
+    ordenaPorData(campanhaA: ICampanhaModel | any, campanhaB: ICampanhaModel | any) {
         const dataA = campanhaA.deadline.split("-");
         const dataB = campanhaB.deadline.split("-");
-        if (orderna(parseInt(dataA[2]), parseInt(dataB[2])) === 0) {
+        return orderna(new Date(dataA[2], dataA[1], dataA[0]).valueOf(), new Date(dataB[2], dataB[1], dataB[0]).valueOf());
+        /*if (orderna(parseInt(dataA[2]), parseInt(dataB[2])) === 0) {
             if (orderna(parseInt(dataA[1]), parseInt(dataB[1])) === 0) {
                 return orderna(parseInt(dataA[0]), parseInt(dataB[0]));
             } else {
@@ -56,10 +57,10 @@ export default {
             }
         } else {
             return orderna(parseInt(dataA[2]), parseInt(dataB[2]));
-        }
+        }*/
     },
 
-    ordernaPorLikes(campanhaA: any, campanhaB: any) {
-        return orderna(campanhaB.likes, campanhaA.likes);
+    ordernaPorLikes(campanhaA: ICampanhaModel, campanhaB: ICampanhaModel) {
+        return orderna(campanhaB.like, campanhaA.like);
     }
 }
