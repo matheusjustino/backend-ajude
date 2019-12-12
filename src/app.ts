@@ -6,8 +6,9 @@ import routes from "./Routes/routes";
 
 const express = require("express");
 const cors = require("cors");
-const helmet = require('helmet');
-const cookieParser = require('cookie-parser');
+const helmet = require("helmet");
+const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
 
 const router = initRoutes(routes);
 
@@ -15,6 +16,7 @@ const PORT = 3333
 
 const app = express();
 
+app.use(morgan("combined"));
 
 app.use(cors());
 app.use(helmet()); // desabilitando alguns headears para maior segurança

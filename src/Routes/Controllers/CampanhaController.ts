@@ -11,6 +11,11 @@ import UtilsCampanha from "../../utils/UtilsCampanha";
 
 import { Response, Request } from "express";
 
+//const logger = require("../../logger/winston").logger;
+const Logger = require("../../logger/winston").Logger;
+const logger = new Logger("[CampanhaController]");
+
+
 const likeOuDislike: { [key: string]: number } = {
     like: 1,
     dislike: 2
@@ -18,7 +23,7 @@ const likeOuDislike: { [key: string]: number } = {
 
 
 class CampanhaController {
-    async criarCampanha(req: Request, res: Response): Promise<Response> {
+    async criarCampanha(req: Request | any, res: Response): Promise<Response> {
         const novaCampanhaModel: ICampanhaModel = UtilsCampanha.alteraStatus(new campanhaModel(req.body));
         novaCampanhaModel.url = UtilsCampanha.geraUrl(novaCampanhaModel.url);
         try {
@@ -26,6 +31,7 @@ class CampanhaController {
             if (novaCampanha === null) {
                 return res.json({ msg: "Erro ao tentar criar a campanha" });
             } else {
+                logger.info(`Campanha ${novaCampanha.nomeCurto} criada por ${req.userId}`)
                 return res.json(novaCampanha);
             }
         } catch (error) {
@@ -36,7 +42,7 @@ class CampanhaController {
     async pesquisarCampanhaPorSubstring(req: Request, res: Response): Promise<Response> {
         try {
             const substring: string = req.body.nomeCurto;
-        const campanhas: ICampanhaModel[] = await campanhaModel.find({ nomeCurto: { $regex: `${substring.toLowerCase()}` } });
+            const campanhas: ICampanhaModel[] = await campanhaModel.find({ nomeCurto: { $regex: `${ substring.toLowerCase()}` } });
             if (campanhas === null) {
                 return res.status(400).json({ msg: "Nenhuma campanha encontrada" });
             } else {
@@ -47,12 +53,13 @@ class CampanhaController {
         }
     }
 
-    async todasAsCampanhas(req: Request, res: Response): Promise<Response> {
+    async todasAsCampanhas(req: Request | any, res: Response): Promise<Response> {
         try {
             const campanhas: ICampanhaModel[] = await campanhaModel.find();
             if (campanhas === null) {
                 return res.status(400).json({ msg: "Nenhuma campanha encontrada" });
             } else {
+                logger.info(`Requição feita por ${req.userId}`);
                 return res.json(campanhas);
             }
         } catch (error) {

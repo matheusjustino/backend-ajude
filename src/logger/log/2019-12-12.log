@@ -1,0 +1,2 @@
+2019-12-12T23:12:03.028Z - info: [LoginController] -  [Tentativa de login] Verbo HTTP: POST - URL: /auth/login
+2019-12-12T23:12:03.329Z - info: [LoginController] -  [Login bem-sucedido] Id usuário: 5decea360e5fc7353192c508

@@ -49,18 +49,9 @@ export default {
         const dataA = campanhaA.deadline.split("-");
         const dataB = campanhaB.deadline.split("-");
         return orderna(new Date(dataA[2], dataA[1], dataA[0]).valueOf(), new Date(dataB[2], dataB[1], dataB[0]).valueOf());
-        /*if (orderna(parseInt(dataA[2]), parseInt(dataB[2])) === 0) {
-            if (orderna(parseInt(dataA[1]), parseInt(dataB[1])) === 0) {
-                return orderna(parseInt(dataA[0]), parseInt(dataB[0]));
-            } else {
-                return orderna(parseInt(dataA[1]), parseInt(dataB[1]));
-            }
-        } else {
-            return orderna(parseInt(dataA[2]), parseInt(dataB[2]));
-        }*/
     },
 
     ordernaPorLikes(campanhaA: ICampanhaModel, campanhaB: ICampanhaModel) {
-        return orderna(campanhaB.like, campanhaA.like);
+        return orderna(campanhaB.like, campanhaA.dislike);
     }
 }
