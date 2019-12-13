@@ -5,12 +5,16 @@ import ICampanhaModel from "../../interfaces/ICampanhaModel";
 import IComentarioModel from "../../interfaces/IComentarioModel";
 import IRespostaModel from "../../interfaces/IRespostaModel";
 
+const Logger = require("../../logger/winston").Logger;
+const logger = new Logger("[DonoGuard]");
+
 
 // Se é o dono da campanha
 export const DonoGuard = async (req: any, res: any) => {
     const usuario: any = await usuarioModel.findOne({ _id: req.userId });
-    let campanha: ICampanhaModel | any = await campanhaModel.findOne({ url: req.params.url });
+    const campanha: ICampanhaModel | any = await campanhaModel.findOne({ url: req.params.url });
     if (campanha === null) {
+        logger.error(`[DonoGuard] Msg: "Campanha não encontrada" - Method: ${req.method} - URL: ${req.url} - Usuário: ${req.userId}`);
         res.status(400).json({ msg: "Campanha não encontrada" });
         return false;
     }
@@ -18,6 +22,7 @@ export const DonoGuard = async (req: any, res: any) => {
     if (campanha.dono === usuario.email) {
         return true;
     } else {
+        logger.error(`[DonoGuard] Msg: "Sem permissão" - Method: ${req.method} - URL: ${req.url} - Usuário: ${req.userId}`);
         res.status(401).json({ msg: "Sem permissão" });
         return false;
     }
@@ -27,6 +32,7 @@ export const DonoGuard = async (req: any, res: any) => {
 export const DonoComentarioGuard = async (req: any, res: any) => {
     let campanha: ICampanhaModel | any = await campanhaModel.findOne({ url: req.params.url });
     if (campanha === null) {
+        logger.error(`[DonoGuard] Msg: "Campanha não encontrada" - Method: ${req.method} - URL: ${req.url} - Usuário: ${req.userId}`);
         res.status(400).json({ msg: "Campanha não encontrada" });
         return false;
     }
@@ -36,6 +42,7 @@ export const DonoComentarioGuard = async (req: any, res: any) => {
     if (comentarioASerApagado.dono == req.userId) {
         return true;
     } else {
+        logger.error(`[DonoGuard] Msg: "Sem permissão" - Method: ${req.method} - URL: ${req.url} - Usuário: ${req.userId}`);
         res.status(401).json({ msg: "Sem permissão" });
         return false;
     }
@@ -45,6 +52,7 @@ export const DonoComentarioGuard = async (req: any, res: any) => {
 export const DonoRespostaGuard = async (req: any, res: any) => {
     let campanha: ICampanhaModel | any = await campanhaModel.findOne({ url: req.params.url });
     if (campanha === null) {
+        logger.error(`[DonoGuard] Msg: "Campanha não encontrada" - Method: ${req.method} - URL: ${req.url} - Usuário: ${req.userId}`);
         res.status(400).json({ msg: "Campanha não encontrada" });
         return false;
     }
@@ -55,6 +63,7 @@ export const DonoRespostaGuard = async (req: any, res: any) => {
     if (respostaASerApagada.dono == req.userId) {
         return true;
     } else {
+        logger.error(`[DonoGuard] Msg: "Sem permissão" - Method: ${req.method} - URL: ${req.url} - Usuário: ${req.userId}`);
         res.status(401).json({ msg: "Sem permissão "});
         return false;
     }

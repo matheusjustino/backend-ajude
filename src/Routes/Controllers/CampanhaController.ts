@@ -11,7 +11,6 @@ import UtilsCampanha from "../../utils/UtilsCampanha";
 
 import { Response, Request } from "express";
 
-//const logger = require("../../logger/winston").logger;
 const Logger = require("../../logger/winston").Logger;
 const logger = new Logger("[CampanhaController]");
 
@@ -29,26 +28,31 @@ class CampanhaController {
         try {
             const novaCampanha = await campanhaModel.create(novaCampanhaModel);
             if (novaCampanha === null) {
+                logger.error(`[Erro ao criar campanha] Method: ${req.method} - URL: ${req.url} - Usuário: ${req.userId}`);
                 return res.json({ msg: "Erro ao tentar criar a campanha" });
             } else {
-                logger.info(`Campanha ${novaCampanha.nomeCurto} criada por ${req.userId}`)
+                logger.info(`[Criação bem-sucedida] Campanha ${novaCampanha.nomeCurto} criada por ${req.userId} - Method: ${req.method} - URL: ${req.url}`);
                 return res.json(novaCampanha);
             }
         } catch (error) {
+            logger.error(error);
             return res.status(400).json(error);
         }
     }
 
-    async pesquisarCampanhaPorSubstring(req: Request, res: Response): Promise<Response> {
+    async pesquisarCampanhaPorSubstring(req: Request | any, res: Response): Promise<Response> {
         try {
             const substring: string = req.body.nomeCurto;
             const campanhas: ICampanhaModel[] = await campanhaModel.find({ nomeCurto: { $regex: `${ substring.toLowerCase()}` } });
             if (campanhas === null) {
+                logger.error(`[Erro ao buscar campanha(s)] Msg: "Nenhuma campanha encontrada" - Method: ${req.method} - URL: ${req.url} - Usuário: ${req.userId}`);
                 return res.status(400).json({ msg: "Nenhuma campanha encontrada" });
             } else {
+                logger.info(`[Busca bem-sucedida] Busca feita por ${req.userId} - Method: ${req.method} - URL: ${req.url}`);
                 return res.json(campanhas);
             }
         } catch (error) {
+            logger.error(error);
             return res.status(400).json(error);
         }
     }
@@ -57,60 +61,76 @@ class CampanhaController {
         try {
             const campanhas: ICampanhaModel[] = await campanhaModel.find();
             if (campanhas === null) {
+                logger.error(`[Erro ao buscar campanhas] Msg: "Nenhuma campanha encontrada" - Method: ${req.method} - URL: ${req.url} - Usuário: ${req.userId}`);
                 return res.status(400).json({ msg: "Nenhuma campanha encontrada" });
             } else {
-                logger.info(`Requição feita por ${req.userId}`);
+                logger.info(`[Busca bem-sucedida] Requição feita por ${req.userId} - Method: ${req.method} - URL: ${req.url}`);
                 return res.json(campanhas);
             }
         } catch (error) {
-            return res.status(400).json(error.errmsg);
-        }
-    }
-
-    async todasAsCampanhasAtivas(req: Request, res: Response): Promise<Response> {
-        try {
-            const campanhas: ICampanhaModel[] = await campanhaModel.find({ status: "Ativa" });
-            if (campanhas === null) {
-                return res.status(400).json({ msg: "Nenhuma campanha ativa encontrada" });
-            } else {
-                return res.json(campanhas);
-            }
-        } catch (error) {
-            return res.status(400).json(error.errmsg);
-        }
-    }
-
-    async melhoresCampanhas(req: Request, res: Response): Promise<Response> {
-        try {
-            const campanhas: ICampanhaModel[] = await campanhaModel.find({ status: "Ativa" });
-            const top5Campanhas = campanhas.sort(UtilsCampanha.ordenaPorMeta).slice(0, 4);
-            if (top5Campanhas === null) {
-                return res.status(400).json({ msg: "Nenhuma campanha encontrada" });
-            } else {
-                return res.json(top5Campanhas);
-            }
-        } catch (error) {
-            return res.status(400).json(error.errmsg);
-        }
-    }
-
-    async campanhaPorUrl(req: Request, res: Response): Promise<Response> {
-        try {
-            const campanha: ICampanhaModel | null = await campanhaModel.findOne({ url: req.params.url });
-            if (campanha === null) {
-                return res.status(400).json({ msg: "Campanha não encontrada" });
-            } else {
-                return res.json(campanha);
-            }
-        } catch (error) {
+            logger.error(error);
             return res.status(400).json(error);
         }
     }
 
-    async atualizarCampanha(req: Request, res: Response): Promise<Response> {
+    async todasAsCampanhasAtivas(req: Request | any, res: Response): Promise<Response> {
+        try {
+            const campanhas: ICampanhaModel[] = await campanhaModel.find({ status: "Ativa" });
+            if (campanhas === null) {
+                logger.error(`[Erro ao buscar campanhas ativas] Msg: "Nenhuma campanha encontrada" - Method: ${req.method} - URL: ${req.url} - Usuário: ${req.userId}`);
+                return res.status(400).json({ msg: "Nenhuma campanha ativa encontrada" });
+            } else {
+                logger.info(`[Busca bem-sucedida] Requisição feita por ${req.userId} - Method: ${req.method} - URL: ${req.url}`);
+                return res.json(campanhas);
+            }
+        } catch (error) {
+            logger.error(error);
+            return res.status(400).json(error);
+        }
+    }
+
+    async melhoresCampanhas(req: Request | any, res: Response): Promise<Response> {
+        try {
+            const campanhas: ICampanhaModel[] = await campanhaModel.find({ status: "Ativa" });
+            const top5Campanhas = campanhas.sort(UtilsCampanha.ordenaPorMeta).slice(0, 4);
+            if (top5Campanhas === null) {
+                logger.error(`[Erro ao buscar melhores campanhas] Msg: "Nenhuma campanha encontrada" - Method: ${req.method} - URL: ${req.url} - Usuário: ${req.userId}`);
+                return res.status(400).json({ msg: "Nenhuma campanha encontrada" });
+            } else {
+                logger.info(`[Busca bem-sucedida] Requisição feita por ${req.userId} - Method: ${req.method} - URL: ${req.url}`);
+                return res.json(top5Campanhas);
+            }
+        } catch (error) {
+            logger.error(error);
+            return res.status(400).json(error.errmsg);
+        }
+    }
+
+    async campanhaPorUrl(req: Request | any, res: Response): Promise<Response> {
+        try {
+            const campanha: ICampanhaModel | null = await campanhaModel.findOne({ url: req.params.url });
+            if (campanha === null) {
+                logger.error(`[Erro ao buscar campanha] Msg: "Nenhuma campanha encontrada" - Method: ${req.method} - URL: ${req.url} - Usuário: ${req.userId}`);
+                return res.status(400).json({ msg: "Campanha não encontrada" });
+            } else {
+                logger.info(`[Busca bem-sucedida] Requisição feita por ${req.userId} - Method: ${req.method} - URL: ${req.url}`);
+                return res.json(campanha);
+            }
+        } catch (error) {
+            logger.error(error);
+            return res.status(400).json(error);
+        }
+    }
+
+    async atualizarCampanha(req: Request | any, res: Response): Promise<Response> {
         try {
             let campanha: ICampanhaModel | any = await campanhaModel.findOne({ url: req.params.url });
             
+            if (campanha === null) {
+                logger.error(`[Erro ao buscar campanha] Msg: "Nenhuma campanha encontrada" - Method: ${req.method} - URL: ${req.url} - Usuário: ${req.userId}`);
+                return res.status(400).json({ msg: "Nenhuma campanha encontrada" });
+            }
+
             const chave: string = Object.keys(req.body)[0];
             
             const valor: any = Object.values(req.body)[0];
@@ -120,9 +140,10 @@ class CampanhaController {
             UtilsCampanha.alteraStatus(campanha);
             
             await campanhaModel.updateOne({ url: campanha.url }, campanha);
-            
+            logger.info(`[Atualização bem-sucedida] Requisição feita por ${req.userId} - Method: ${req.method} - URL: ${req.url}`);
             return res.json(campanha);
         } catch (error) {
+            logger.error(error);
             return res.status(400).json(error);
         }
     }
@@ -131,6 +152,7 @@ class CampanhaController {
         try {
             const campanha: ICampanhaModel | null = await campanhaModel.findOne({ url: req.params.url });
             if (campanha === null) {
+                logger.error(`[Erro ao buscar campanha] Msg: "Nenhuma campanha encontrada" - Method: ${req.method} - URL: ${req.url} - Usuário: ${req.userId}`);
                 return res.status(400).json({ msg: "Campanha não encontrada" });
             } else {
                 const valor: string = req.params.valor;
@@ -144,10 +166,11 @@ class CampanhaController {
                 campanha.likesEDislikes = arrayLikesEDislikes;
                 
                 await campanhaModel.updateOne({ url: req.params.url }, campanha);
-                
+                logger.info(`[Atualização de LikeOuDislike bem-sucedida] Requisição feita por ${req.userId} - Method: ${req.method} - URL: ${req.url}`);
                 return res.json(campanha);
             }
         } catch (error) {
+            logger.error(error);
             return res.status(400).json(error);
         }
     }
@@ -156,6 +179,7 @@ class CampanhaController {
         try {
             let campanha: ICampanhaModel | null = await campanhaModel.findOne({ url: req.params.url });
             if (campanha === null) {
+                logger.error(`[Erro ao buscar campanha] Msg: "Nenhuma campanha encontrada" - Method: ${req.method} - URL: ${req.url} - Usuário: ${req.userId}`);
                 return res.status(400).json({ msg: "Campanha não encontrada" });
             } else {
                 const comentario: IComentarioModel = new comentarioModel(req.body);
@@ -165,10 +189,11 @@ class CampanhaController {
                 campanha.comentarios.push(comentario);
                 
                 await campanhaModel.updateOne({ url: req.params.url }, campanha);
-                
+                logger.info(`[Comentário bem-sucedido] Requisição feita por ${req.userId} - Method: ${req.method} - URL: ${req.url}`);
                 return res.json(campanha);
             }
         } catch (error) {
+            logger.error(error);
             return res.status(40).json(error);
         }
     }
@@ -177,15 +202,17 @@ class CampanhaController {
         try {
             let campanha: ICampanhaModel | null = await campanhaModel.findOne({ url: req.params.url });
             if (campanha === null) {
+                logger.error(`[Erro ao buscar campanha] Msg: "Nenhuma campanha encontrada" - Method: ${req.method} - URL: ${req.url} - Usuário: ${req.userId}`);
                 return res.status(400).json({ msg: "Campanha não encontrada" });
             } else {
                 campanha.comentarios = campanha.comentarios.filter((comentario: IComentarioModel) => comentario.dono != req.userId);
                 
                 await campanhaModel.updateOne({ url: req.params.url }, campanha);
-                
+                logger.info(`[Comentário Apagado] Requisição feita por ${req.userId} - Method: ${req.method} - URL: ${req.url}`);
                 return res.json(campanha);
             }
         } catch (error) {
+            logger.error(error);
             return res.status(400).json(error);
         }
     }
@@ -194,6 +221,7 @@ class CampanhaController {
         try {
             let campanha: ICampanhaModel | null = await campanhaModel.findOne({ url: req.params.url });
             if (campanha === null) {
+                logger.error(`[Erro ao buscar campanha] Msg: "Nenhuma campanha encontrada" - Method: ${req.method} - URL: ${req.url} - Usuário: ${req.userId}`);
                 return res.status(400).json({ msg: "Campanha não encontrada" });
             } else {
                 const resposta: IRespostaModel = new respostaModel(req.body.resposta);
@@ -203,17 +231,20 @@ class CampanhaController {
                 campanha.comentarios.filter((comentario: IComentarioModel) => comentario._id == req.body.idComentario)[0].respostas.push(resposta);
                 
                 await campanhaModel.updateOne({ url: req.params.url }, campanha);
+                logger.info(`[Resposta bem-sucedida] Requisição feita por ${req.userId} - Method: ${req.method} - URL: ${req.url}`);
                 return res.json(campanha);
             }
         } catch (error) {
+            logger.error(error);
             return res.status(400).json(error);
         }
     }
 
-    async apagarResposta(req: Request, res: Response): Promise<Response> {
+    async apagarResposta(req: Request | any, res: Response): Promise<Response> {
         try {
             const campanha: ICampanhaModel | null = await campanhaModel.findOne({ url: req.params.url });
             if (campanha === null) {
+                logger.error(`[Erro ao buscar campanha] Msg: "Nenhuma campanha encontrada" - Method: ${req.method} - URL: ${req.url} - Usuário: ${req.userId}`);
                 return res.status(400).json({ msg: "Campanha não encontrada" });
             } else {
                 const comentarioDaRespostaASerApagada: any = campanha.comentarios.filter((comentario: IComentarioModel) => comentario._id == req.body.idComentario)[0];
@@ -223,10 +254,11 @@ class CampanhaController {
                 campanha.comentarios = comentarioDaRespostaASerApagada;
                 
                 await campanhaModel.updateOne({ url: req.params.url }, campanha);
-                
+                logger.info(`[Resposta apagada] Requisição feita por ${req.userId} - Method: ${req.method} - URL: ${req.url}`);
                 return res.json(campanha);
             }
         } catch (error) {
+            logger.error(error);
             return res.status(400).json(error);
         }
     }

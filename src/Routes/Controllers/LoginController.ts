@@ -12,16 +12,16 @@ const jwt = require("jsonwebtoken");
 class LoginController {
     async fazerLogin(req: Request, res: Response): Promise<Response> {
         try {
-            logger.info(`[Tentativa de login] Verbo HTTP: ${req.method} - URL: ${req.url}`);
+            logger.info(`[Tentativa de login] Method: ${req.method} - URL: ${req.url}`);
             const { email, senha, _id }: IUsuarioModel | any = await usuarioModel.findOne({ email: req.body.email });
             if (email === req.body.email && await bcrypt.compare(req.body.senha, senha)) {
                 const token = jwt.sign({ _id }, process.env.SECRET, {// passando id e secret para gerar o token
                     expiresIn: 900 // 15 minutos até ficar inválido
                 });
-                logger.info(`[Login bem-sucedido] Id usuário: ${_id}`);
+                logger.info(`[Login bem-sucedido] Id usuário: ${_id} - Method: ${req.method} - URL: ${req.url}`);
                 return res.status(200).json({ auth: true, token: token, usuario: { email: email } });
             }
-            logger.error(`[Login malsucedido] Id usuário: ${_id}`)
+            logger.error(`[Login malsucedido] Id usuário: ${_id} - Method: ${req.method} - URL: ${req.url}`)
             return res.status(500).json({ msg: "Login inválido!" });
         } catch (error) {
             logger.error(error);
