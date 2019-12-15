@@ -12,7 +12,7 @@ export const AuthGuard = async (req: any, res: any) => {
     } else {
         const result = await jwt.verify(token, process.env.SECRET, function (err: any, decoded: any) {
             if (err) {
-                logger.error(`[AuthGuard] Msg: "Falha na autenticação. Token inválido." - Method: ${req.method} - URL: ${req.url}`);
+                logger.error(`[AuthGuard] Msg: "Falha na autenticação. Token inválido." - Method: ${req.method} - URL: ${req.url} - { Host: ${req.headers.host} - User-agent: ${req.headers["user-agent"]} }`);
                 res.status(401).json({ auth: false, message: "Falha de autenticação" });
                 return false;
             } else {

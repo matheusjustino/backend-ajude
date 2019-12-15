@@ -1,8 +1,9 @@
-const mongoose = require('mongoose');
+const { connect } = require('mongoose');
+const { databaseConfig } = require("../configs/Config.json");
 
-mongoose.connect('mongodb+srv://projeto-ajude:ajude321123@cluster0-r58uk.mongodb.net/dbAjude?retryWrites=true&w=majority', {
+connect(databaseConfig.databaseUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }, console.log("Banco de dados ON!"));
 
-export default () => mongoose;
+export default () => connect;
