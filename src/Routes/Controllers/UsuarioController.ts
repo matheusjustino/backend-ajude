@@ -4,8 +4,6 @@ import campanhaModel from "../../models/Campanha";
 import IUsuarioModel from "../../interfaces/IUsuarioModel";
 import ICampanhaModel from "../../interfaces/ICampanhaModel";
 
-import UtilsUsuario from "../../utils/UtilsUsuario";
-
 import { Response, Request } from "express";
 
 import emailController from "./EmailController";

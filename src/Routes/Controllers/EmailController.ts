@@ -1,5 +1,4 @@
 import IUsuarioModel from "../../interfaces/IUsuarioModel";
-import { Response, response } from "express";
 
 const { emailConfig } = require("../../configs/Config.json");
 const nodeMailer = require("nodemailer");
@@ -34,7 +33,7 @@ class EmailController {
                 text: textoEmail
             };
 
-            transporter.sendMail(mailOptions, (error: string, response: Response) => {
+            transporter.sendMail(mailOptions, (error: string, response: any) => {
                 if (error) {
                     logger.error(error);
                 } else {
