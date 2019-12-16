@@ -1,6 +1,6 @@
 import IUsuarioModel from "../../interfaces/IUsuarioModel";
 
-const { emailConfig } = require("../../configs/Config.json");
+const { emailConfig } = require("../../configs/Config");
 const nodeMailer = require("nodemailer");
 const Logger = require("../../logger/winston").Logger;
 const logger = new Logger("[EmailController]");
