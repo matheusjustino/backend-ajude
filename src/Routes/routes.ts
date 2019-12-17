@@ -2,10 +2,12 @@ import loginController from "./Controllers/LoginController";
 import usuarioController from "./Controllers/UsuarioController";
 import campanhaController from "./Controllers/CampanhaController";
 
+import IRoute from "../interfaces/IRoute";
+
 import { AuthGuard } from "./Guards/AuthGuard";
 import { DonoGuard, DonoComentarioGuard, DonoRespostaGuard } from "./Guards/DonoGuard";
 
-const routes = [
+const routes: IRoute[]  = [
     // Rotas de autenticação
     {
         path: "auth",
