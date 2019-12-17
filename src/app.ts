@@ -12,7 +12,7 @@ const cookieParser = require("cookie-parser");
 
 const router = initRoutes(routes);
 
-const PORT = 3333
+const PORT = process.env.PORT || 3333;
 
 const app = express();
 
@@ -30,5 +30,5 @@ app.use("/api", router);
 mongoose(); // conectando com o BD
 
 app.listen(PORT, () => {
-    console.log(`[Servidor] Rodando em http://localhost:${PORT}`);
+    console.log(`[Servidor] Rodando na porta ${PORT}`);
 });
