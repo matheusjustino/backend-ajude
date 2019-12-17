@@ -7,9 +7,9 @@ const logger = new Logger("[EmailController]");
 
 
 class EmailController {
-    private emailSistema: string = emailConfig.emailSistema;
-    private senhaSistema: string = emailConfig.senhaSistema;
-    private service: string = emailConfig.service;
+    public emailSistema: string = emailConfig.emailSistema;
+    public senhaSistema: string = emailConfig.senhaSistema;
+    public service: string = emailConfig.service;
 
     boasVindasEmail({ primeiroNome, ultimoNome, email }: IUsuarioModel) {
         try {
